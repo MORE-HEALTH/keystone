@@ -53,7 +53,7 @@ datetime.prototype.getInputFromData = function(data) {
  */
 datetime.prototype.validateInput = function(data, required, item) {
 	if (!(this.path in data && !(this.paths.date in data && this.paths.time in data)) && item && item.get(this.path)) return true;
-	var newValue = moment.tz(this.getInputFromData(data), parseFormats, this.timezone);
+	var newValue = moment(this.getInputFromData(data), parseFormats);
 	if (required && (!newValue || !newValue.isValid())) {
 		return false;
 	} else if (this.getInputFromData(data) && newValue && !newValue.isValid()) {
@@ -71,8 +71,7 @@ datetime.prototype.updateItem = function(item, data) {
 		return;
 	}
 	var m = this.isUTC ? moment.utc : moment;
-	var newValue = moment.tz(this.getInputFromData(data), parseFormats, this.timezone);
-
+	var newValue = m(this.getInputFromData(data), parseFormats);
 	if (newValue.isValid()) {
 		if (!item.get(this.path) || !newValue.isSame(item.get(this.path))) {
 			item.set(this.path, newValue.toDate());

@@ -1,4 +1,4 @@
-var moment = require('moment-timezone');
+var moment = require('moment');
 var Pikaday = require('pikaday');
 var React = require('react');
 
@@ -14,7 +14,6 @@ module.exports = React.createClass({
 	},
 	
 	getInitialState: function() {
-		moment.tz.setDefault(this.props.timezone);
 		return {
 			value: this.props.value,
 			id: Math.round(Math.random() * 100000)
@@ -26,7 +25,7 @@ module.exports = React.createClass({
 		this.setState({
 			value: newProps.value
 		});
-		this.picker.setMoment(moment(newProps.value, this.props.format), true);
+		this.picker.setMoment(moment(newProps.value, this.props.format));
 	},
 
 	componentDidMount: function() {
