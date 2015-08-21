@@ -93,7 +93,7 @@ date.prototype.parse = function(item) {
  */
 date.prototype.validateInput = function(data, required, item) {
 	if (!(this.path in data) && item && item.get(this.path)) return true;
-	var newValue = moment(data[this.path], this.parseFormatString);
+	var newValue = moment.tz(data[this.path], this.parseFormatString, this.timezone);
 	if (required && (!newValue.isValid())) {
 		return false;
 	} else if (data[this.path] && newValue && !newValue.isValid()) {
@@ -111,7 +111,7 @@ date.prototype.updateItem = function(item, data) {
 		return;
 	}
 	var m = this.isUTC ? moment.utc : moment;
-	var newValue = m(data[this.path], this.parseFormatString);
+	var newValue = moment.tz(data[this.path], this.parseFormatString, this.timezone);
 	if (newValue.isValid()) {
 		if (!item.get(this.path) || !newValue.isSame(item.get(this.path))) {
 			item.set(this.path, newValue.toDate());
