@@ -5,7 +5,7 @@ var DateInput = require('../../components/DateInput');
 var moment = require('moment');
 
 module.exports = Field.create({
-	
+
 	displayName: 'DatetimeField',
 
 	focusTargetRef: 'dateInput',
@@ -18,14 +18,16 @@ module.exports = Field.create({
 	parseFormats: ['YYYY-MM-DD', 'YYYY-MM-DD h:m:s a', 'YYYY-MM-DD h:m a', 'YYYY-MM-DD H:m:s', 'YYYY-MM-DD H:m'],
 
 	getInitialState: function() {
+		console.log('realValue', this.props.value);
 		return {
 			dateValue: this.props.value ? this.moment(this.props.value).format(this.dateInputFormat) : '',
-			timeValue: this.props.value ? this.moment(this.props.value).format(this.timeInputFormat) : ''
+			timeValue: this.props.value ? this.moment(this.props.value).format(this.timeInputFormat) : '',
+			realValue: this.props.value ? this.moment(this.props.value).toISOString() : ''
 		};
 	},
 
 	getDefaultProps: function() {
-		return { 
+		return {
 			formatString: 'Do MMM YYYY, h:mm:ss a'
 		};
 	},
@@ -50,19 +52,25 @@ module.exports = Field.create({
 	handleChange: function(dateValue, timeValue) {
 		var value = dateValue + ' ' + timeValue;
 		var datetimeFormat = this.dateInputFormat + ' ' + this.timeInputFormat;
+		this.setState({
+			dateValue: dateValue,
+			timeValue: timeValue,
+			realValue: moment(value, datetimeFormat).toISOString()
+		});
 		this.props.onChange({
 			path: this.props.path,
 			value: this.isValid(value) ? moment(value, datetimeFormat).toISOString() : null
+
 		});
+		console.log('value',value);
+		console.log('isostring', moment(value, datetimeFormat).toISOString());
 	},
 
 	dateChanged: function(value) {
-		this.setState({ dateValue: value });
 		this.handleChange(value, this.state.timeValue);
 	},
 
 	timeChanged: function(event) {
-		this.setState({ timeValue: event.target.value });
 		this.handleChange(this.state.dateValue, event.target.value);
 	},
 
@@ -71,7 +79,8 @@ module.exports = Field.create({
 		var timeValue = moment().format(this.timeInputFormat);
 		this.setState({
 			dateValue: dateValue,
-			timeValue: timeValue
+			timeValue: timeValue,
+			realValue: moment().toISOString()
 		});
 		this.handleChange(dateValue, timeValue);
 	},
@@ -84,6 +93,7 @@ module.exports = Field.create({
 				<div className={fieldClassName}>
 					<DateInput ref="dateInput" name={this.props.paths.date} value={this.state.dateValue} format={this.dateInputFormat} onChange={this.dateChanged} />
 					<input type="text" name={this.props.paths.time} value={this.state.timeValue} placeholder="HH:MM:SS am/pm" onChange={this.timeChanged} autoComplete="off" className="form-control time" />
+					<input type="hidden" name={this.props.paths.real} value={this.state.realValue} />
 					<button type="button" className="btn btn-default btn-set-now" onClick={this.setNow}>Now</button>
 				</div>
 			);
