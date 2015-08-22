@@ -1,11 +1,11 @@
 {
-  "name": "keystone",
-  "version": "0.3.13",
+  "name": "keystone-adv",
+  "version": "0.0.1",
   "description": "Web Application Framework and Admin GUI / Content Management System built on Express.js and Mongoose",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/keystonejs/keystone.git"
+    "url": "https://github.com/WofloW/keystone.git"
   },
   "dependencies": {
     "async": "~1.4.0",
