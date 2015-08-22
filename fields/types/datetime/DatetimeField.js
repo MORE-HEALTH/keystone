@@ -18,7 +18,6 @@ module.exports = Field.create({
 	parseFormats: ['YYYY-MM-DD', 'YYYY-MM-DD h:m:s a', 'YYYY-MM-DD h:m a', 'YYYY-MM-DD H:m:s', 'YYYY-MM-DD H:m'],
 
 	getInitialState: function() {
-		console.log('realValue', this.props.value);
 		return {
 			dateValue: this.props.value ? this.moment(this.props.value).format(this.dateInputFormat) : '',
 			timeValue: this.props.value ? this.moment(this.props.value).format(this.timeInputFormat) : '',
@@ -62,8 +61,6 @@ module.exports = Field.create({
 			value: this.isValid(value) ? moment(value, datetimeFormat).toISOString() : null
 
 		});
-		console.log('value',value);
-		console.log('isostring', moment(value, datetimeFormat).toISOString());
 	},
 
 	dateChanged: function(value) {

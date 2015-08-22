@@ -41,7 +41,6 @@ datetime.prototype.parse = DateType.prototype.parse;
  * Get the value from a data object; may be simple or a pair of fields
  */
 datetime.prototype.getInputFromData = function(data) {
-	console.log('bigdata',data);
 	if(this.paths.real in data){
 		return data[this.paths.real];
 	}
@@ -78,12 +77,7 @@ datetime.prototype.updateItem = function(item, data) {
 
 	//var m = this.isUTC ? moment.utc : moment;
 	var m = moment.utc;
-	console.log('isUTC',this.isUTC);
-	console.log('m', m);
-	console.log('data',this.getInputFromData(data));
-	console.log('format',parseFormats);
 	var newValue = m(this.getInputFromData(data), parseFormats);
-	console.log(newValue);
 	if (newValue.isValid()) {
 		if (!item.get(this.path) || !newValue.isSame(item.get(this.path))) {
 			item.set(this.path, newValue.toDate());
