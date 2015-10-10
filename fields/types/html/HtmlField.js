@@ -96,12 +96,7 @@ module.exports = Field.create({
 			),
 			toolbar = options.overrideToolbar ? '' : 'bold italic | alignleft aligncenter alignright | bullist numlist | outdent indent | link',
 			i;
-
-		if (options.enableImages) {
-			plugins.push('image');
-			toolbar += ' | image';
-		}
-
+		
 		if (options.enableCloudinaryUploads || options.enableS3Uploads) {
 			plugins.push('uploadimage');
 			toolbar += options.enableImages ? ' uploadimage' : ' | uploadimage';
@@ -119,6 +114,12 @@ module.exports = Field.create({
 				plugins.push(additionalPlugins[i]);
 			}
 		}
+
+		if (options.enableImages) {
+			plugins.push('image');
+			toolbar += ' | image';
+		}
+		
 		if (options.importcss) {
 			plugins.push('importcss');
 			var importcssOptions = {
