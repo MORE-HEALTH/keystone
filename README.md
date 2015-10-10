@@ -1,6 +1,10 @@
 ![KeystoneJS](http://keystonejs.com/images/logo.svg)
 ===================================
 
+0.0.3
+update tinymce to 4.2.6
+
+
 [![Build Status](https://travis-ci.org/keystonejs/keystone.svg?branch=master)](https://travis-ci.org/keystonejs/keystone)
 
 [KeystoneJS](http://keystonejs.com) is a powerful Node.js content management system and web app framework built on [express](http://expressjs.com) and [mongoose](http://mongoosejs.com). Keystone makes it easy to create sophisticated web sites and apps, and comes with a beautiful auto-generated Admin UI.
