@@ -97,9 +97,15 @@ module.exports = Field.create({
 			toolbar = options.overrideToolbar ? '' : 'bold italic | alignleft aligncenter alignright | bullist numlist | outdent indent | link',
 			i;
 		
+		
+		
 		if (options.enableCloudinaryUploads || options.enableS3Uploads) {
 			plugins.push('uploadimage');
-			toolbar += options.enableImages ? ' uploadimage' : ' | uploadimage';
+			toolbar += options.enableImages ? ' | uploadimage' : ' | uploadimage';
+		}
+		if (options.enableImages) {
+			plugins.push('image');
+			toolbar += ' image';
 		}
 
 		if (options.additionalButtons) {
@@ -115,10 +121,7 @@ module.exports = Field.create({
 			}
 		}
 
-		if (options.enableImages) {
-			plugins.push('image');
-			toolbar += ' | image';
-		}
+		
 		
 		if (options.importcss) {
 			plugins.push('importcss');
