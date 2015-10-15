@@ -64,7 +64,12 @@ module.exports = Field.create({
 				.get('/keystone/api/' + self.props.refList.path + '/' + input + '?simple')
 				.set('Accept', 'application/json')
 				.end(function (err, res) {
-					if (err) throw err;
+					
+					if (err) {
+						expandedValues = _.without(expandedValues, _.findWhere(expandedValues, {value: input})); 
+						
+						return finish(); // throw err
+					}
 					
 					var value = res.body;
 					_.findWhere(expandedValues, { value: value.id }).label = value.name;
@@ -178,7 +183,8 @@ module.exports = Field.create({
 
 		body.push(<Select multi={this.props.many} onChange={this.updateValue} name={this.props.path} asyncOptions={this.getOptions} value={this.state.expandedValues} />);
 		
-		if (!this.props.many && this.props.value) {
+		if (!this.props.many && this.props.value && this.state.expandedValues.length > 0) {
+			
 			body.push(
 				<a href={'/keystone/' + this.props.refList.path + '/' + this.props.value} className='btn btn-link btn-goto-linked-item'>
 					view {this.props.refList.singular.toLowerCase()}
