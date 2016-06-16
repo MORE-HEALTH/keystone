@@ -7,10 +7,12 @@ var _ = require('underscore'),
 	keystone = require('../../../'),
 	util = require('util'),
 	knox = require('knox'),
-	// s3 = require('s3'),
+// s3 = require('s3'),
 	utils = require('keystone-utils'),
 	grappling = require('grappling-hook'),
-	super_ = require('../Type');
+	super_ = require('../Type'),
+	fs = require("fs"),
+	Jimp = require("jimp");
 
 /**
  * S3File FieldType Constructor
@@ -386,6 +388,7 @@ s3file.prototype.uploadFile = function(item, file, update, callback) {
 	if (field.options.allowedTypes && !_.contains(field.options.allowedTypes, filetype)) {
 		return callback(new Error('Unsupported File Type: ' + filetype));
 	}
+	// console.log(file)
 
 	var doUpload = function() {
 
@@ -431,11 +434,27 @@ s3file.prototype.uploadFile = function(item, file, update, callback) {
 		});
 	};
 
-	this.callHook('pre:upload', [item, file], function(err) {
-		if (err) return callback(err);
-		doUpload();
-	});
+	var that = this;
 
+	if(field.options.resizeImage){
+		Jimp.read(file.path).then(function(jimpImage){
+			jimpImage.resize(field.options.newWidth, Jimp.AUTO).write(file.path, function(image){
+				var stats = fs.statSync(file.path)
+				file.size = stats["size"];
+				that.callHook('pre:upload', [item, file], function(err) {
+					if (err) return callback(err);
+					doUpload();
+				});
+			});
+		}).catch(function (err) {
+			console.error(err);
+		});
+	} else {
+		that.callHook('pre:upload', [item, file], function(err) {
+			if (err) return callback(err);
+			doUpload();
+		});
+	}
 };
 
 
