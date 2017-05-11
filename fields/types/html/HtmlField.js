@@ -121,10 +121,6 @@ module.exports = Field.create({
 		var toolbar = options.overrideToolbar ? '' : 'bold italic | alignleft aligncenter alignright | bullist numlist | outdent indent | removeformat | link ';
 		var i;
 
-		if (options.enableImages) {
-			plugins.push('image');
-			toolbar += ' | image';
-		}
 
 		if (options.enableCloudinaryUploads || options.enableS3Uploads) {
 			plugins.push('uploadimage');
@@ -133,7 +129,7 @@ module.exports = Field.create({
 
 		if (options.enableImages) {
 			plugins.push('image');
-			toolbar += ' image';
+			toolbar += ' | image';
 		}
 
 		if (options.additionalButtons) {
