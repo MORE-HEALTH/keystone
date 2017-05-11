@@ -149,11 +149,6 @@ module.exports = Field.create({
 			}
 		}
 
-		if (options.enableImages) {
-			plugins.push('image');
-			toolbar += ' | image';
-		}
-
 		if (options.importcss) {
 			plugins.push('importcss');
 			var importcssOptions = {
