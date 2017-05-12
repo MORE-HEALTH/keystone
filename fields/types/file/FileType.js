@@ -1,6 +1,8 @@
 var FieldType = require('../Type');
 var util = require('util');
 var utils = require('keystone-utils');
+var fs = require("fs"),
+	Jimp = require("jimp");
 
 var debug = require('debug')('keystone:fields:file');
 
@@ -45,14 +47,33 @@ file.prototype.addToSchema = function (schema) {
  */
 file.prototype.upload = function (item, file, callback) {
 	var field = this;
-	// TODO; Validate there is actuall a file to upload
-	debug('[%s.%s] Uploading file for item %s:', this.list.key, this.path, item.id, file);
-	this.storage.uploadFile(file, function (err, result) {
-		if (err) return callback(err);
-		debug('[%s.%s] Uploaded file for item %s with result:', field.list.key, field.path, item.id, result);
-		item.set(field.path, result);
-		callback(null, result);
-	});
+
+	var doUpload = function() {
+		// TODO; Validate there is actuall a file to upload
+		debug('[%s.%s] Uploading file for item %s:', this.list.key, this.path, item.id, file);
+		this.storage.uploadFile(file, function (err, result) {
+			if (err) return callback(err);
+			debug('[%s.%s] Uploaded file for item %s with result:', field.list.key, field.path, item.id, result);
+			item.set(field.path, result);
+			callback(null, result);
+		});
+	};
+
+	var that = this;
+	if(field.options.resizeImage){
+		Jimp.read(file.path).then(function(jimpImage){
+			jimpImage.resize(field.options.newWidth, Jimp.AUTO).write(file.path, function(image){
+				var stats = fs.statSync(file.path)
+				file.size = stats["size"];
+				doUpload();
+			});
+		}).catch(function (err) {
+			console.error(err);
+		});
+	} else {
+		doUpload();
+	}
+
 };
 
 /**

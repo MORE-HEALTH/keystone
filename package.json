@@ -92,7 +92,8 @@
     "string-to-stream": "1.1.0",
     "vkey": "1.0.1",
     "watchify": "3.8.0",
-    "xhr": "2.4.0"
+    "xhr": "2.4.0",
+    "jimp": "^0.2.24"
   },
   "devDependencies": {
     "browserify-middleware": "7.1.0",
