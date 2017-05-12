@@ -1,12 +1,14 @@
 /**
-Deprecated.
+ Deprecated.
 
-Using this field will now throw an error, and this code will be removed soon.
+ Using this field will now throw an error, and this code will be removed soon.
 
-See https://github.com/keystonejs/keystone/wiki/File-Fields-Upgrade-Guide
-*/
+ See https://github.com/keystonejs/keystone/wiki/File-Fields-Upgrade-Guide
+ */
 
 /* eslint-disable */
+
+var _ = require('lodash');
 
 var loggedWarning = false;
 
@@ -21,34 +23,34 @@ function s3file (list, path, options) {
 		+ '\n\nSee https://github.com/keystonejs/keystone/wiki/File-Fields-Upgrade-Guide\n');
 
 	/*
-	grappling.mixin(this).allowHooks('pre:upload');
+	 grappling.mixin(this).allowHooks('pre:upload');
 
-	this._underscoreMethods = ['format', 'uploadFile'];
-	this._fixedSize = 'full';
+	 this._underscoreMethods = ['format', 'uploadFile'];
+	 this._fixedSize = 'full';
 
-	// TODO: implement filtering, usage disabled for now
-	options.nofilter = true;
+	 // TODO: implement filtering, usage disabled for now
+	 options.nofilter = true;
 
-	// TODO: implement initial form, usage disabled for now
-	if (options.initial) {
-		throw new Error('Invalid Configuration\n\n'
-			+ 'S3File fields (' + list.key + '.' + path + ') do not currently support being used as initial fields.\n');
-	}
+	 // TODO: implement initial form, usage disabled for now
+	 if (options.initial) {
+	 throw new Error('Invalid Configuration\n\n'
+	 + 'S3File fields (' + list.key + '.' + path + ') do not currently support being used as initial fields.\n');
+	 }
 
-	s3file.super_.call(this, list, path, options);
+	 s3file.super_.call(this, list, path, options);
 
-	// validate s3 config (has to happen after super_.call)
-	if (!this.s3config) {
-		throw new Error('Invalid Configuration\n\n'
-			+ 'S3File fields (' + list.key + '.' + path + ') require the "s3 config" option to be set.\n\n'
-			+ 'See http://keystonejs.com/docs/configuration/#services-amazons3 for more information.\n');
-	}
+	 // validate s3 config (has to happen after super_.call)
+	 if (!this.s3config) {
+	 throw new Error('Invalid Configuration\n\n'
+	 + 'S3File fields (' + list.key + '.' + path + ') require the "s3 config" option to be set.\n\n'
+	 + 'See http://keystonejs.com/docs/configuration/#services-amazons3 for more information.\n');
+	 }
 
-	// Could be more pre- hooks, just upload for now
-	if (options.pre && options.pre.upload) {
-		this.pre('upload', options.pre.upload);
-	}
-	*/
+	 // Could be more pre- hooks, just upload for now
+	 if (options.pre && options.pre.upload) {
+	 this.pre('upload', options.pre.upload);
+	 }
+	 */
 
 }
 s3file.properName = 'S3File';
@@ -184,7 +186,7 @@ s3file.prototype.isModified = function (item) {
  * Deprecated
  */
 s3file.prototype.inputIsValid = function (data) { // eslint-disable-line no-unused-vars
-	// TODO - how should file field input be validated?
+												  // TODO - how should file field input be validated?
 	return true;
 };
 
@@ -192,7 +194,7 @@ s3file.prototype.inputIsValid = function (data) { // eslint-disable-line no-unus
  * Updates the value for this field in the item from a data object
  */
 s3file.prototype.updateItem = function (item, data, callback) { // eslint-disable-line no-unused-vars
-	// TODO - direct updating of data (not via upload)
+																// TODO - direct updating of data (not via upload)
 	process.nextTick(callback);
 };
 
@@ -277,11 +279,11 @@ s3file.prototype.generateHeaders = function (item, file, callback) {
 				var _header = {};
 				if (validateHeader(header, callback)) {
 					_header[header.name] = header.value;
-					customHeaders = assign(customHeaders, _header);
+					customHeaders = _.extend(customHeaders, _header);
 				}
 			});
 		} else if (_.isObject(defaultHeaders)) {
-			customHeaders = assign(customHeaders, defaultHeaders);
+			customHeaders = _.extend(customHeaders, defaultHeaders);
 		} else {
 			return callback(new Error('Unsupported Header option: defaults headers must be either an Object or Array ' + JSON.stringify(defaultHeaders)));
 		}
@@ -298,11 +300,11 @@ s3file.prototype.generateHeaders = function (item, file, callback) {
 					var _header = {};
 					if (validateHeader(header, callback)) {
 						_header[header.name] = header.value;
-						customHeaders = assign(customHeaders, _header);
+						customHeaders = _.extend(customHeaders, _header);
 					}
 				});
 			} else if (_.isObject(computedHeaders)) {
-				customHeaders = assign(customHeaders, computedHeaders);
+				customHeaders = _.extend(customHeaders, computedHeaders);
 			} else {
 				return callback(new Error('Unsupported Header option: computed headers must be either an Object or Array ' + JSON.stringify(computedHeaders)));
 			}
@@ -312,16 +314,16 @@ s3file.prototype.generateHeaders = function (item, file, callback) {
 				var _header = {};
 				if (validateHeader(header, callback)) {
 					_header[header.name] = header.value;
-					customHeaders = assign(customHeaders, _header);
+					customHeaders = _.extend(customHeaders, _header);
 				}
 			});
 		} else if (_.isObject(headersOption)) {
-			customHeaders = assign(customHeaders, headersOption);
+			customHeaders = _.extend(customHeaders, headersOption);
 		}
 	}
 
 	if (validateHeaders(customHeaders, callback)) {
-		headers = assign(headers, customHeaders);
+		headers = _.extend(headers, customHeaders);
 	}
 
 	return headers;
