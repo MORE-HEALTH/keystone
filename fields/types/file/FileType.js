@@ -50,8 +50,8 @@ file.prototype.upload = function (item, file, callback) {
 
 	var doUpload = function() {
 		// TODO; Validate there is actuall a file to upload
-		debug('[%s.%s] Uploading file for item %s:', this.list.key, this.path, item.id, file);
-		this.storage.uploadFile(file, function (err, result) {
+		debug('[%s.%s] Uploading file for item %s:', field.list.key, field.path, item.id, file);
+		field.storage.uploadFile(file, function (err, result) {
 			if (err) return callback(err);
 			debug('[%s.%s] Uploaded file for item %s with result:', field.list.key, field.path, item.id, result);
 			item.set(field.path, result);
@@ -59,7 +59,6 @@ file.prototype.upload = function (item, file, callback) {
 		});
 	};
 
-	var that = this;
 	if(field.options.resizeImage){
 		Jimp.read(file.path).then(function(jimpImage){
 			jimpImage.resize(field.options.newWidth, Jimp.AUTO).write(file.path, function(image){
