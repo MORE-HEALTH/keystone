@@ -75,26 +75,31 @@ const MobileNavigation = React.createClass({
 			const href = section.lists[0].external ? section.lists[0].path : `${Keystone.adminPath}/${section.lists[0].path}`;
 			const className = (this.props.currentSectionKey && this.props.currentSectionKey === section.key) ? 'MobileNavigation__section is-active' : 'MobileNavigation__section';
 
-			// Render a SectionItem
-			return (
-				<MobileSectionItem
-					key={section.key}
-					className={className}
-					href={href}
-					lists={section.lists}
-					currentListKey={this.props.currentListKey}
-					onClick={this.toggleMenu}
-				>
-					{section.label}
-				</MobileSectionItem>
-			);
+			if ((section.requireAdmin && Keystone.user.isSuperAdmin) || !section.requireAdmin) {
+
+				// Render a SectionItem
+				return (
+					<MobileSectionItem
+						key={section.key}
+						className={className}
+						href={href}
+						lists={section.lists}
+						currentListKey={this.props.currentListKey}
+						onClick={this.toggleMenu}
+					>
+						{section.label}
+					</MobileSectionItem>
+				);
+			} else {
+				return null;
+			}
 		});
 	},
 	// Render a blockout
 	renderBlockout () {
 		if (!this.state.menuIsVisible) return null;
 
-		return <div className="MobileNavigation__blockout" onClick={this.toggleMenu} />;
+		return <div className="MobileNavigation__blockout" onClick={this.toggleMenu}/>;
 	},
 	// Render the sidebar menu
 	renderMenu () {
@@ -119,7 +124,8 @@ const MobileNavigation = React.createClass({
 						onClick={this.toggleMenu}
 						className="MobileNavigation__bar__button MobileNavigation__bar__button--menu"
 					>
-						<span className={'MobileNavigation__bar__icon octicon octicon-' + (this.state.menuIsVisible ? 'x' : 'three-bars')} />
+						<span
+							className={'MobileNavigation__bar__icon octicon octicon-' + (this.state.menuIsVisible ? 'x' : 'three-bars')}/>
 					</button>
 					<span className="MobileNavigation__bar__label">
 						{this.props.brand}
@@ -128,10 +134,10 @@ const MobileNavigation = React.createClass({
 						href={this.props.signoutUrl}
 						className="MobileNavigation__bar__button MobileNavigation__bar__button--signout"
 					>
-						<span className="MobileNavigation__bar__icon octicon octicon-sign-out" />
+						<span className="MobileNavigation__bar__icon octicon octicon-sign-out"/>
 					</a>
 				</div>
-				<div className="MobileNavigation__bar--placeholder" />
+				<div className="MobileNavigation__bar--placeholder"/>
 				<Transition
 					transitionName="MobileNavigation__menu"
 					transitionEnterTimeout={260}

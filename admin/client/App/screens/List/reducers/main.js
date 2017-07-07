@@ -141,7 +141,6 @@ function lists (state = initialState, action) {
 				},
 			});
 		case SET_CURRENT_PAGE:
-			console.log(action.index);
 			return assign({}, state, {
 				loading: true,
 				page: {

@@ -4,8 +4,8 @@
  */
 
 import React from 'react';
-import { Container, Spinner } from '../../elemental';
-import { connect } from 'react-redux';
+import {Container, Spinner} from '../../elemental';
+import {connect} from 'react-redux';
 
 import Lists from './components/Lists';
 import Section from './components/Section';
@@ -45,9 +45,11 @@ var HomeView = React.createClass({
 				<div className="dashboard-groups">
 					{(this.props.error) && (
 						<AlertMessages
-							alerts={{ error: { error:
-								"There is a problem with the network, we're trying to reconnect...",
-							} }}
+							alerts={{
+								error: {
+									error: "There is a problem with the network, we're trying to reconnect...",
+								}
+							}}
 						/>
 					)}
 					{/* Render flat nav */}
@@ -61,18 +63,22 @@ var HomeView = React.createClass({
 						<div>
 							{/* Render nav with sections */}
 							{Keystone.nav.sections.map((navSection) => {
-								return (
-									<Section key={navSection.key} id={navSection.key} label={navSection.label}>
-										<Lists
-											counts={this.props.counts}
-											lists={navSection.lists}
-											spinner={spinner}
-										/>
-									</Section>
-								);
+								if ((navSection.requireAdmin && Keystone.user.isSuperAdmin) || !navSection.requireAdmin) {
+									return (
+										<Section key={navSection.key} id={navSection.key} label={navSection.label}>
+											<Lists
+												counts={this.props.counts}
+												lists={navSection.lists}
+												spinner={spinner}
+											/>
+										</Section>
+									);
+								} else {
+									return null;
+								}
 							})}
 							{/* Render orphaned lists */}
-							{Keystone.orphanedLists.length ? (
+							{Keystone.orphanedLists.length  && Keystone.user.isSuperAdmin ? (
 								<Section label="Other" icon="octicon-database">
 									<Lists
 										counts={this.props.counts}
