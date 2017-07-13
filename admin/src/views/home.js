@@ -19,23 +19,26 @@ var View = React.createClass({
 		return (
 			<div>
 				{Keystone.nav.sections.map((navSection) => {
-					return (
-						<div className="nav-section" key={navSection.key}>
-							<h4>{navSection.label}</h4>
-							<ul>
-								{navSection.lists.map((list) => {
-									var href = list.external ? list.path : '/keystone/' + list.path;
-									return (
-										<li key={list.path}><a href={href}>{list.label}</a></li>
-									);
-								})}
-							</ul>
-						</div>
-					);
+					if ((navSection.requireAdmin && Keystone.user.isSuperAdmin) || !navSection.requireAdmin) {
+						return (
+							<div className="nav-section" key={navSection.key}>
+								<h4>{navSection.label}</h4>
+								<ul>
+									{navSection.lists.map((list) => {
+										var href = list.external ? list.path : '/keystone/' + list.path;
+										return (
+											<li key={list.path}><a href={href}>{list.label}</a></li>
+										);
+									})}
+								</ul>
+							</div>
+						);
+					} else {
+						return null
+					}
 				})}
-				{() => {
-					if (!Keystone.orphanedLists.length) return;
-					return (
+				{
+					Keystone.orphanedLists.length> 0 && !Keystone.user.isSuperAdmin &&
 						<div className="nav-section">
 							<h4>Other</h4>
 							<ul>
@@ -47,9 +50,8 @@ var View = React.createClass({
 									);
 								})}
 							</ul>
-						</div>
-					);
-				}()}
+						</div> 
+				}
 			</div>
 		);
 	},
